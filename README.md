@@ -20,6 +20,8 @@ Here are some of my most notable repositories:
 
 - **[Minichart](https://github.com/aplominski/minichart)**: Javascript-based liblary to create charts on html canvas
 
+- **[memtest](https://github.com/aplominski/memtest)**: A **CLI** **CLI** tool to check if RAM is working properly. 
+
 - **[fhash](https://github.com/aplominski/fhash)**: A **CLI** tool to calculate multiple hashes of given file.
 ---
 
@@ -49,4 +51,4 @@ Here are some of my most notable repositories:
 
 ## 📊 GitHub Stats
 
-[](https://github-readme-stats.vercel.app/api?username=aplominski&show_icons=true&hide_title=true&count_private=true&hide=prs)
+[![My GitHub stats](https://github-readme-stats.vercel.app/api?username=aplominski)]()
