@@ -20,9 +20,8 @@ Here are some of my most notable repositories:
 
 - **[Minichart](https://github.com/aplominski/minichart)**: Javascript-based liblary to create charts on html canvas
 
-- **[memtest](https://github.com/aplominski/memtest)**: A **CLI** **CLI** tool to check if RAM is working properly. 
+- **[JSONN](https://github.com/aplominski/jsonn)**: C++ liblary to safe parse/serialize JSON files.
 
-- **[fhash](https://github.com/aplominski/fhash)**: A **CLI** tool to calculate multiple hashes of given file.
 ---
 
 ## 🛠️ Tools I Use
