@@ -1,0 +1,151 @@
+---
+import "../styles/global.css";
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<meta
+			name="description"
+			content="Aleksander Plominski - C/C++/Rust developer focused on performant, reliable systems."
+		/>
+		<link rel="canonical" href="https://aplominski.dev/" />
+		<meta property="og:title" content="Aleksander Płomiński | C/C++/Rust Developer" />
+		<meta property="og:description" content="C/C++/Rust Developer building fast, dependable software close to the metal." />
+		<meta property="og:type" content="website" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@type": "Person",
+				"name": "Aleksander Płomiński",
+				"url": "https://aplominski.dev",
+				"jobTitle": "C/C++/Rust Developer",
+				"description": "C/C++/Rust Developer building fast, dependable software close to the metal.",
+				"sameAs": [
+					"https://aplominski.dev",
+					"https://aplominski.github.io",
+					"https://github.com/aplominski"
+				],
+				"contactPoint": {
+					"@type": "ContactPoint",
+					"email": "hello@aplominski.dev",
+					"contactType": "personal"
+				}
+			}
+		</script>
+		<title>Aleksander Plominski | C/C++/Rust Developer</title>
+	</head>
+	<body class="bg-graphite text-zinc-100 antialiased">
+		<div class="bg-layer" aria-hidden="true"></div>
+		<div class="bg-orb bg-orb-a" aria-hidden="true"></div>
+		<div class="bg-orb bg-orb-b" aria-hidden="true"></div>
+		<main class="mx-auto max-w-6xl px-6 pb-20 pt-10 md:px-10 md:pt-16">
+			<header class="hero reveal">
+				<p class="eyebrow">aplominski.dev</p>
+				<h1 class="hero-title">Aleksander Płomiński</h1>
+				<p class="hero-subtitle fade-in" style="--fade-delay: 180ms;">
+					C/C++/Rust Developer building fast, dependable software close to the metal.
+				</p>
+				<div class="mt-8 flex flex-wrap gap-4 fade-in" style="--fade-delay: 280ms;">
+					<a class="btn-primary" href="/contact">Contact me</a>
+					<a class="btn-secondary" href="https://github.com/aplominski" rel="noreferrer">GitHub</a>
+					<a class="btn-secondary" href="/projects">Projects</a>
+				</div>
+			</header>
+
+			<section class="section reveal" style="--delay: 120ms;">
+				<h2>About</h2>
+				<p>
+					I design and implement systems where performance, correctness, and operational clarity
+					matter. My daily work spans low-level optimization, robust tooling, and production
+					reliability across Linux environments.
+				</p>
+			</section>
+
+			<section class="section reveal" style="--delay: 220ms;">
+				<h2>Core Stack</h2>
+				<div class="stack-list">
+					<div class="stack-group">
+						<span class="stack-label">Languages</span>
+						<span class="stack-items">C &bull; C++ &bull; Rust</span>
+					</div>
+					<div class="stack-group">
+						<span class="stack-label">Cross-Platform</span>
+						<span class="stack-items">Dart &bull; Flutter</span>
+					</div>
+					<div class="stack-group">
+						<span class="stack-label">Linux</span>
+						<span class="stack-items">Systemd &bull; Shell &bull; Docker</span>
+					</div>
+					<div class="stack-group">
+						<span class="stack-label">Build & CI/CD</span>
+						<span class="stack-items">Meson &bull; GitHub Actions</span>
+					</div>
+					<div class="stack-group">
+						<span class="stack-label">Debug</span>
+						<span class="stack-items">GDB &bull; Valgrind &bull; Perf</span>
+					</div>
+					<div class="stack-group">
+						<span class="stack-label">Tools</span>
+						<span class="stack-items">Git &bull; Vim &bull; GCC</span>
+					</div>
+				</div>
+			</section>
+
+			<section class="section reveal" style="--delay: 320ms;">
+				<h2>Projects</h2>
+				<div class="project-grid-mini">
+					<a href="/projects/hs-http" class="project-card-mini">
+						<img src="/ss/hs-http_index.png" alt="hs-http" />
+						<div class="project-info-mini">
+							<span class="project-name-mini">hs-http</span>
+							<span class="project-type-mini">Web server</span>
+						</div>
+					</a>
+					<a href="/projects/mozaic" class="project-card-mini">
+						<img src="/ss/mozaic_main.png" alt="mozaic" />
+						<div class="project-info-mini">
+							<span class="project-name-mini">mozaic</span>
+							<span class="project-type-mini">IRC Client</span>
+						</div>
+					</a>
+					<a href="/projects/opendevnote" class="project-card-mini">
+						<img src="/ss/odn_today.png" alt="OpenDevNote" />
+						<div class="project-info-mini">
+							<span class="project-name-mini">OpenDevNote</span>
+							<span class="project-type-mini">Productivity app</span>
+						</div>
+					</a>
+				</div>
+				<div class="mt-6">
+					<a class="btn-secondary" href="/projects">Show more</a>
+				</div>
+			</section>
+
+			<section class="section reveal" style="--delay: 420ms;">
+				<h2>Contact</h2>
+				<p>
+					Reach out at
+					<a href="mailto:hello@aplominski.dev">hello@aplominski.dev</a>
+					or connect on
+					<a href="https://github.com/aplominski" rel="noreferrer">github.com/aplominski</a>.
+				</p>
+			</section>
+
+			<footer class="mt-14 border-t border-white/10 pt-6 text-sm text-zinc-400 reveal" style="--delay: 520ms;">
+				<p>© {new Date().getFullYear()} Aleksander Płomiński</p>
+			</footer>
+		</main>
+
+		<noscript>
+			<div class="noscript-banner">
+				JavaScript is disabled. This site is designed to work fully without JavaScript.
+			</div>
+		</noscript>
+	</body>
+</html>

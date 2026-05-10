@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://aplominski.dev/sitemap.xml
