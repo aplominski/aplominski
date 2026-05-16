@@ -1,164 +1,66 @@
 ---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Lightbox from "../../components/Lightbox.astro";
 import "../../styles/global.css";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="description" content="OpenDevNote: Flutter productivity application" />
-		<meta name="author" content="Aleksander Płomiński" />
-		<link rel="canonical" href="https://aplominski.dev/projects/opendevnote" />
-		<title>OpenDevNote | Aleksander Płomiński</title>
-	</head>
-	<body class="bg-graphite text-zinc-100 antialiased">
-		<div class="bg-orb bg-orb-a" aria-hidden="true"></div>
-		<div class="bg-orb bg-orb-b" aria-hidden="true"></div>
+<BaseLayout
+  title="OpenDevNote | Aleksander Płomiński"
+  description="OpenDevNote: Flutter productivity application"
+  canonical="https://aplominski.dev/projects/opendevnote"
+>
+  <main class="mx-auto max-w-5xl px-6 pb-20 pt-10 md:px-10 md:pt-16">
+    <header class="hero reveal">
+      <p class="eyebrow">aplominski.dev / projects / opendevnote</p>
+      <h1 class="hero-title">OpenDevNote</h1>
+      <p class="hero-subtitle fade-in" style="--fade-delay: 160ms;">
+        Flutter-based productivity application with calculator, GitHub integration, calendar, and markdown editor.
+      </p>
+    </header>
 
-		<main class="mx-auto max-w-5xl px-6 pb-20 pt-10 md:px-10 md:pt-16">
-			<header class="hero reveal">
-				<p class="eyebrow">aplominski.dev / projects / opendevnote</p>
-				<h1 class="hero-title">OpenDevNote</h1>
-				<p class="hero-subtitle fade-in" style="--fade-delay: 160ms;">
-					Flutter-based productivity application with calculator, GitHub integration, calendar, and markdown editor.
-				</p>
-			</header>
+    <section class="section reveal" style="--delay: 220ms;">
+      <h2>About</h2>
+      <p>
+        A comprehensive productivity suite built with Flutter for cross-platform deployment. Features an
+        integrated scientific calculator with history, GitHub integration with repository overview, commit history,
+        and GitHub Actions workflow runs. Issues and pull requests support coming in the next major update.
+        Also includes a calendar view and a full-featured markdown editor with live preview and export capabilities.
+      </p>
+    </section>
 
-			<section class="section reveal" style="--delay: 220ms;">
-				<h2>About</h2>
-				<p>
-					A comprehensive productivity suite built with Flutter for cross-platform deployment. Features an 
-					integrated scientific calculator with history, GitHub integration with repository overview, commit history, 
-					and GitHub Actions workflow runs. Issues and pull requests support coming in the next major update. 
-					Also includes a calendar view and a full-featured markdown editor with live preview and export capabilities.
-				</p>
-			</section>
+    <section class="section reveal" style="--delay: 320ms;">
+      <h2>Screenshots</h2>
+      <div class="gallery">
+        <div class="gallery-main">
+          <img class="lightbox-trigger gallery-load" loading="lazy" src="/ss/odn_today.png" alt="opendevnote today view" />
+        </div>
+        <div class="gallery-thumbs">
+          <img class="lightbox-trigger gallery-load" loading="lazy" style="--fade-delay: 100ms" src="/ss/odn_project.png" alt="opendevnote projects" />
+          <img class="lightbox-trigger gallery-load" loading="lazy" style="--fade-delay: 200ms" src="/ss/odn_project_view.png" alt="opendevnote project detail" />
+        </div>
+      </div>
+    </section>
 
-			<section class="section reveal" style="--delay: 320ms;">
-				<h2>Screenshots</h2>
-				<div class="gallery">
-					<div class="gallery-main">
-						<img class="lightbox-trigger gallery-load" loading="lazy" src="/ss/odn_today.png" alt="opendevnote today view" />
-					</div>
-					<div class="gallery-thumbs">
-						<img class="lightbox-trigger gallery-load" loading="lazy" style="--fade-delay: 100ms" src="/ss/odn_project.png" alt="opendevnote projects" />
-						<img class="lightbox-trigger gallery-load" loading="lazy" style="--fade-delay: 200ms" src="/ss/odn_project_view.png" alt="opendevnote project detail" />
-					</div>
-				</div>
-			</section>
+    <section class="section reveal" style="--delay: 420ms;">
+      <h2>Tech Stack</h2>
+      <div class="tech-tags">
+        <span>Dart</span>
+        <span>Flutter</span>
+        <span>GitHub API</span>
+        <span>Cross-Platform</span>
+      </div>
+    </section>
 
-			<section class="section reveal" style="--delay: 420ms;">
-				<h2>Tech Stack</h2>
-				<div class="tech-tags">
-					<span>Dart</span>
-					<span>Flutter</span>
-					<span>GitHub API</span>
-					<span>Cross-Platform</span>
-				</div>
-			</section>
+    <section class="section reveal" style="--delay: 480ms;">
+      <h2>Repository</h2>
+      <p><a href="https://github.com/aplominski/opendevnote" rel="noreferrer">github.com/aplominski/opendevnote</a></p>
+    </section>
 
-			<section class="section reveal" style="--delay: 480ms;">
-				<h2>Repository</h2>
-				<p><a href="https://github.com/aplominski/opendevnote" rel="noreferrer">github.com/aplominski/opendevnote</a></p>
-			</section>
+    <div class="mt-10 flex flex-wrap gap-4 fade-in" style="--fade-delay: 520ms;">
+      <a class="btn-secondary" href="/projects">&larr; All Projects</a>
+      <a class="btn-primary" href="/contact">Contact me</a>
+    </div>
+  </main>
 
-			<div class="mt-10 flex flex-wrap gap-4 fade-in" style="--fade-delay: 520ms;">
-				<a class="btn-secondary" href="/projects">← All Projects</a>
-				<a class="btn-primary" href="/contact">Contact me</a>
-			</div>
-		</main>
-
-		<noscript>
-			<div class="noscript-banner">
-				JavaScript is disabled. This page is fully functional without JavaScript.
-			</div>
-		</noscript>
-
-		<div id="lightbox" class="lightbox">
-			<button class="lightbox-close" aria-label="Close">&times;</button>
-			<button class="lightbox-nav lightbox-prev" aria-label="Previous">&#8249;</button>
-			<img src="" alt="Lightbox image" />
-			<button class="lightbox-nav lightbox-next" aria-label="Next">&#8250;</button>
-		</div>
-
-		<script>
-			document.addEventListener('DOMContentLoaded', function() {
-				const triggers = document.querySelectorAll('.lightbox-trigger');
-				const lightbox = document.getElementById('lightbox');
-				const lightboxImg = lightbox.querySelector('img');
-				const closeBtn = lightbox.querySelector('.lightbox-close');
-				const prevBtn = lightbox.querySelector('.lightbox-prev');
-				const nextBtn = lightbox.querySelector('.lightbox-next');
-				let navTimeout = null;
-
-				let currentIndex = 0;
-				const images = Array.from(triggers).map(t => t.src);
-
-				const lazyObserver = new IntersectionObserver((entries) => {
-					entries.forEach(entry => {
-						if (entry.isIntersecting) {
-							entry.target.classList.add('loaded');
-							lazyObserver.unobserve(entry.target);
-						}
-					});
-				}, { rootMargin: '100px' });
-				document.querySelectorAll('.gallery-load').forEach(img => lazyObserver.observe(img));
-
-				triggers.forEach((trigger, index) => {
-					trigger.style.cursor = 'pointer';
-					trigger.addEventListener('click', () => openLightbox(index));
-				});
-
-				function openLightbox(index) {
-					currentIndex = index;
-					lightboxImg.classList.remove('visible');
-					lightboxImg.src = images[currentIndex];
-					lightbox.classList.add('active');
-					document.body.style.overflow = 'hidden';
-					setTimeout(() => lightboxImg.classList.add('visible'), 100);
-				}
-
-				function closeLightbox() {
-					lightboxImg.classList.remove('visible');
-					setTimeout(() => {
-						lightbox.classList.remove('active');
-						document.body.style.overflow = '';
-					}, 200);
-				}
-
-				function navigateTo(dir) {
-					if (navTimeout) return;
-					navTimeout = true;
-					lightboxImg.style.transition = 'opacity 250ms ease, transform 250ms ease';
-					lightboxImg.style.opacity = '0';
-					lightboxImg.style.transform = `translateX(${dir * 30}px) scale(0.95)`;
-					setTimeout(() => {
-						currentIndex = (currentIndex + dir + images.length) % images.length;
-						lightboxImg.src = images[currentIndex];
-						lightboxImg.style.transform = `translateX(${-dir * 30}px) scale(0.95)`;
-						void lightboxImg.offsetHeight;
-						lightboxImg.style.opacity = '1';
-						lightboxImg.style.transform = 'translateX(0) scale(1)';
-						setTimeout(() => { navTimeout = null; }, 300);
-					}, 250);
-				}
-
-				function showPrev() { navigateTo(-1); }
-				function showNext() { navigateTo(1); }
-
-				closeBtn.addEventListener('click', closeLightbox);
-				prevBtn.addEventListener('click', showPrev);
-				nextBtn.addEventListener('click', showNext);
-				lightbox.addEventListener('click', (e) => {
-					if (e.target === lightbox) closeLightbox();
-				});
-				document.addEventListener('keydown', (e) => {
-					if (!lightbox.classList.contains('active')) return;
-					if (e.key === 'Escape') closeLightbox();
-					if (e.key === 'ArrowLeft') showPrev();
-					if (e.key === 'ArrowRight') showNext();
-				});
-			});
-		</script>
-	</body>
-</html>
+  <Lightbox />
+</BaseLayout>

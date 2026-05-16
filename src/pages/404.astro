@@ -1,44 +1,27 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
 import "../styles/global.css";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content="Page not found" />
-		<meta name="author" content="Aleksander Płomiński" />
-		<link rel="canonical" href="https://aplominski.dev/404" />
-		<title>404 | Aleksander Płomiński</title>
-	</head>
-	<body class="bg-graphite text-zinc-100 antialiased">
-		<div class="bg-orb bg-orb-a" aria-hidden="true"></div>
-		<div class="bg-orb bg-orb-b" aria-hidden="true"></div>
+<BaseLayout
+  title="404 | Aleksander Płomiński"
+  description="Page not found"
+  canonical="https://aplominski.dev/404"
+>
+  <main class="mx-auto max-w-4xl px-6 pb-20 pt-10 md:px-10 md:pt-16">
+    <header class="hero reveal">
+      <p class="eyebrow">aplominski.dev / 404</p>
+      <h1 class="hero-title">Page Not Found</h1>
+      <p class="hero-subtitle fade-in" style="--fade-delay: 160ms;">
+        This page doesn't exist - or it used to.
+      </p>
+    </header>
 
-		<main class="mx-auto max-w-4xl px-6 pb-20 pt-10 md:px-10 md:pt-16">
-			<header class="hero reveal">
-				<p class="eyebrow">aplominski.dev / 404</p>
-				<h1 class="hero-title">Page Not Found</h1>
-				<p class="hero-subtitle fade-in" style="--fade-delay: 160ms;">
-					This page doesn't exist - or it used to.
-				</p>
-			</header>
-
-			<section class="section reveal" style="--delay: 220ms;">
-				<div class="flex flex-wrap gap-4">
-					<a class="btn-primary" href="/">Go home</a>
-					<a class="btn-secondary" href="/projects">View projects</a>
-				</div>
-			</section>
-		</main>
-
-		<noscript>
-			<div class="noscript-banner">
-				JavaScript is disabled. This site is designed to work fully without JavaScript.
-			</div>
-		</noscript>
-	</body>
-</html>
+    <section class="section reveal" style="--delay: 220ms;">
+      <div class="flex flex-wrap gap-4">
+        <a class="btn-primary" href="/">Go home</a>
+        <a class="btn-secondary" href="/projects">View projects</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

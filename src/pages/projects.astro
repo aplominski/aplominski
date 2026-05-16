@@ -1,72 +1,58 @@
 ---
+import BaseLayout from "../layouts/BaseLayout.astro";
 import "../styles/global.css";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="description" content="Project skeleton page for aplominski.dev" />
-		<meta name="author" content="Aleksander Płomiński" />
-		<link rel="canonical" href="https://aplominski.dev/projects" />
-		<title>Projects | Aleksander Płomiński</title>
-	</head>
-	<body class="bg-graphite text-zinc-100 antialiased">
-		<div class="bg-orb bg-orb-a" aria-hidden="true"></div>
-		<div class="bg-orb bg-orb-b" aria-hidden="true"></div>
+<BaseLayout
+  title="Projects | Aleksander Płomiński"
+  description="Projects by Aleksander Płomiński - C/C++/Rust developer"
+  canonical="https://aplominski.dev/projects"
+>
+  <main class="mx-auto max-w-6xl px-6 pb-20 pt-10 md:px-10 md:pt-16">
+    <header class="hero reveal">
+      <p class="eyebrow">aplominski.dev / projects</p>
+      <h1 class="hero-title">Projects</h1>
+      <p class="hero-subtitle fade-in" style="--fade-delay: 150ms;">
+        Open-source work and side projects.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-4 fade-in" style="--fade-delay: 260ms;">
+        <a class="btn-secondary" href="/">Back to home</a>
+        <a class="btn-secondary" href="/contact">Contact page</a>
+        <a class="btn-primary" href="mailto:hello@aplominski.dev">Contact me</a>
+      </div>
+    </header>
 
-		<main class="mx-auto max-w-6xl px-6 pb-20 pt-10 md:px-10 md:pt-16">
-			<header class="hero reveal">
-				<p class="eyebrow">aplominski.dev / projects</p>
-				<h1 class="hero-title">Projects</h1>
-				<p class="hero-subtitle fade-in" style="--fade-delay: 150ms;">
-					Skeleton page ready for your real project data.
-				</p>
-				<div class="mt-8 flex flex-wrap gap-4 fade-in" style="--fade-delay: 260ms;">
-					<a class="btn-secondary" href="/">Back to home</a>
-					<a class="btn-secondary" href="/contact">Contact page</a>
-					<a class="btn-primary" href="mailto:hello@aplominski.dev">Contact me</a>
-				</div>
-			</header>
-
-			<section class="section reveal" style="--delay: 220ms;">
-				<h2>Projects</h2>
-				<div class="project-grid">
-					<a href="/projects/hs-http" class="project-card">
-						<div class="project-thumb">
-							<img src="/ss/hs-http_index.png" alt="hs-http" />
-						</div>
-						<div class="project-info">
-							<h3>hs-http</h3>
-							<p>HTTP/1.1 & HTTP/2 server with C/C++ plugin support</p>
-						</div>
-					</a>
-					<a href="/projects/mozaic" class="project-card">
-						<div class="project-thumb">
-							<img src="/ss/mozaic_main.png" alt="mozaic" />
-						</div>
-						<div class="project-info">
-							<h3>mozaic</h3>
-							<p>TUI-based IRC client written in Rust</p>
-						</div>
-					</a>
-					<a href="/projects/opendevnote" class="project-card">
-						<div class="project-thumb">
-							<img src="/ss/odn_today.png" alt="OpenDevNote" />
-						</div>
-						<div class="project-info">
-							<h3>OpenDevNote</h3>
-							<p>Flutter productivity app with calculator, GitHub, calendar</p>
-						</div>
-					</a>
-				</div>
-			</section>
-		</main>
-
-		<noscript>
-			<div class="noscript-banner">
-				JavaScript is disabled. This page is fully functional without JavaScript.
-			</div>
-		</noscript>
-	</body>
-</html>
+    <section class="section reveal" style="--delay: 220ms;">
+      <h2>Projects</h2>
+      <div class="project-grid">
+        <a href="/projects/hs-http" class="project-card">
+          <div class="project-thumb">
+            <img src="/ss/hs-http_index.png" alt="hs-http" />
+          </div>
+          <div class="project-info">
+            <h3>hs-http</h3>
+            <p>HTTP/1.1 & HTTP/2 server with C/C++ plugin support</p>
+          </div>
+        </a>
+        <a href="/projects/mozaic" class="project-card">
+          <div class="project-thumb">
+            <img src="/ss/mozaic_main.png" alt="mozaic" />
+          </div>
+          <div class="project-info">
+            <h3>mozaic</h3>
+            <p>TUI-based IRC client written in Rust</p>
+          </div>
+        </a>
+        <a href="/projects/opendevnote" class="project-card">
+          <div class="project-thumb">
+            <img src="/ss/odn_today.png" alt="OpenDevNote" />
+          </div>
+          <div class="project-info">
+            <h3>OpenDevNote</h3>
+            <p>Flutter productivity app with calculator, GitHub, calendar</p>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
