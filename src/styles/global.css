@@ -232,6 +232,13 @@ a:focus-visible,
   border-radius: 0.75rem;
   border: 1px solid rgb(127 164 198 / 0.2);
   background: rgb(12 15 23 / 0.8);
+  transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
+}
+
+.gallery-main img:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px -8px rgb(127 203 255 / 0.25);
+  border-color: rgb(127 203 255 / 0.4);
 }
 
 .gallery-thumbs {
@@ -246,12 +253,24 @@ a:focus-visible,
   border-radius: 0.6rem;
   border: 1px solid rgb(127 164 198 / 0.15);
   background: rgb(12 15 23 / 0.6);
-  transition: transform 200ms ease, border-color 200ms ease;
+  transition: transform 240ms ease, border-color 240ms ease;
 }
 
 .gallery-thumbs img:hover {
-  transform: translateY(-2px);
-  border-color: rgb(127 203 255 / 0.3);
+  transform: translateY(-3px) scale(1.02);
+  border-color: rgb(127 203 255 / 0.45);
+}
+
+.gallery-load {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 400ms ease, transform 400ms ease;
+  transition-delay: var(--fade-delay, 0ms);
+}
+
+.gallery-load.loaded {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .tech-tags {
@@ -365,18 +384,24 @@ a:focus-visible,
 }
 
 .lightbox {
-  display: none;
   position: fixed;
   inset: 0;
   background: rgb(7 10 16 / 0.96);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   z-index: 9999;
+  display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease, backdrop-filter 300ms ease;
 }
 
 .lightbox.active {
-  display: flex;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .lightbox img {
@@ -385,6 +410,14 @@ a:focus-visible,
   object-fit: contain;
   border-radius: 0.5rem;
   box-shadow: 0 20px 60px -20px rgb(0 0 0 / 0.6);
+  opacity: 0;
+  transform: translateY(24px) scale(0.95);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.lightbox img.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 .lightbox-close {
@@ -552,9 +585,24 @@ a:focus-visible,
   .bg-orb,
   .btn-primary,
   .reveal,
-  .fade-in {
+  .fade-in,
+  .gallery-load {
     animation: none !important;
     opacity: 1;
+  }
+
+  .gallery-load {
+    transform: none;
+  }
+
+  .lightbox,
+  .lightbox img {
+    transition: none;
+  }
+
+  .lightbox img {
+    opacity: 1;
+    transform: none;
   }
 
   .btn-primary,
