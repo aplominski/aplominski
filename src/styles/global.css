@@ -580,6 +580,108 @@ a:focus-visible,
   }
 }
 
+.prose h2 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+  color: var(--color-text-primary);
+}
+
+.prose h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  color: var(--color-text-primary);
+}
+
+.prose p {
+  margin-bottom: 1rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+.prose a {
+  color: var(--color-link);
+}
+
+.prose a:hover {
+  color: var(--color-link-hover);
+}
+
+.prose code {
+  background: rgb(18 24 35 / 0.9);
+  border: 1px solid rgb(127 164 198 / 0.2);
+  border-radius: 0.3rem;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.88em;
+  color: var(--color-text-primary);
+}
+
+.prose pre {
+  background: rgb(12 15 23 / 0.95);
+  border: 1px solid rgb(127 164 198 / 0.2);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.prose ul {
+  list-style: disc;
+  margin: 0.75rem 0 1rem 1.75rem;
+  color: var(--color-text-secondary);
+  line-height: 1.75;
+}
+.prose ul li {
+  margin-bottom: 0.35rem;
+  padding-left: 0.25rem;
+}
+.prose ul li::marker {
+  color: var(--color-accent);
+}
+
+.prose ol {
+  list-style: decimal;
+  margin: 0.75rem 0 1rem 1.75rem;
+  color: var(--color-text-secondary);
+  line-height: 1.75;
+}
+.prose ol li {
+  margin-bottom: 0.35rem;
+  padding-left: 0.25rem;
+}
+.prose ol li::marker {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.prose blockquote {
+  border-left: 3px solid var(--color-accent);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.prose img {
+  max-width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(127 164 198 / 0.2);
+  margin: 1.5rem 0;
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid rgb(255 255 255 / 0.1);
+  margin: 2rem 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bg-layer,
   .bg-orb,

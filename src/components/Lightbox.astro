@@ -1,0 +1,86 @@
+<div id="lightbox" class="lightbox">
+  <button class="lightbox-close" aria-label="Close">&times;</button>
+  <button class="lightbox-nav lightbox-prev" aria-label="Previous">&#8249;</button>
+  <img src="" alt="Lightbox image" />
+  <button class="lightbox-nav lightbox-next" aria-label="Next">&#8250;</button>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const triggers = document.querySelectorAll('.lightbox-trigger');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = lightbox.querySelector('img');
+    const closeBtn = lightbox.querySelector('.lightbox-close');
+    const prevBtn = lightbox.querySelector('.lightbox-prev');
+    const nextBtn = lightbox.querySelector('.lightbox-next');
+    let navTimeout = null;
+
+    let currentIndex = 0;
+    const images = Array.from(triggers).map(t => t.src);
+
+    const lazyObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('loaded');
+          lazyObserver.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '100px' });
+    document.querySelectorAll('.gallery-load').forEach(img => lazyObserver.observe(img));
+
+    triggers.forEach((trigger, index) => {
+      trigger.style.cursor = 'pointer';
+      trigger.addEventListener('click', () => openLightbox(index));
+    });
+
+    function openLightbox(index) {
+      currentIndex = index;
+      lightboxImg.classList.remove('visible');
+      lightboxImg.src = images[currentIndex];
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => lightboxImg.classList.add('visible'), 100);
+    }
+
+    function closeLightbox() {
+      lightboxImg.classList.remove('visible');
+      setTimeout(() => {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+      }, 200);
+    }
+
+    function navigateTo(dir) {
+      if (navTimeout) return;
+      navTimeout = true;
+      lightboxImg.style.transition = 'opacity 250ms ease, transform 250ms ease';
+      lightboxImg.style.opacity = '0';
+      lightboxImg.style.transform = `translateX(${dir * 30}px) scale(0.95)`;
+      setTimeout(() => {
+        currentIndex = (currentIndex + dir + images.length) % images.length;
+        lightboxImg.src = images[currentIndex];
+        lightboxImg.style.transform = `translateX(${-dir * 30}px) scale(0.95)`;
+        void lightboxImg.offsetHeight;
+        lightboxImg.style.opacity = '1';
+        lightboxImg.style.transform = 'translateX(0) scale(1)';
+        setTimeout(() => { navTimeout = null; }, 300);
+      }, 250);
+    }
+
+    function showPrev() { navigateTo(-1); }
+    function showNext() { navigateTo(1); }
+
+    closeBtn.addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', showPrev);
+    nextBtn.addEventListener('click', showNext);
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') showPrev();
+      if (e.key === 'ArrowRight') showNext();
+    });
+  });
+</script>

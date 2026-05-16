@@ -1,0 +1,417 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+import "katex/dist/katex.min.css";
+import "../../styles/global.css";
+
+export async function getStaticPaths() {
+  const articles = await getCollection("research");
+  return articles.map((article) => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+
+const siteUrl = "https://aplominski.dev";
+const articleUrl = `${siteUrl}/research/${article.id}`;
+const dateStr = article.data.date.toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
+function parseBibTeX(raw) {
+  const entry = { type: "", key: "", fields: {} };
+  const typeMatch = raw.match(/@(\w+)\s*\{\s*(\S+)/);
+  if (!typeMatch) return entry;
+  entry.type = typeMatch[1].toLowerCase();
+  entry.key = typeMatch[2].replace(/,?\s*$/, "");
+  const fieldRe = /(\w+)\s*=\s*(?:\{([^}]*)\}|"([^"]*)")/g;
+  let m;
+  while ((m = fieldRe.exec(raw))) {
+    entry.fields[m[1].toLowerCase()] = (m[2] || m[3]).trim();
+  }
+  return entry;
+}
+
+function parseAllBibTeX(raw) {
+  const entries = [];
+  const parts = raw.split(/(?=@\w)/);
+  for (const part of parts) {
+    if (!part.trim()) continue;
+    const entry = parseBibTeX(part);
+    if (entry.key) entries.push(entry);
+  }
+  return entries;
+}
+
+function getFirstAuthorLastName(entry) {
+  if (!entry.fields.author) return entry.key || "";
+  const author = entry.fields.author.split(/\s+and\s+/i)[0].trim();
+  if (author.includes(",")) return author.split(",")[0].trim();
+  return author.split(/\s+/).pop() || "";
+}
+
+function formatAuthors(full, style) {
+  const parts = full.split(/\s+and\s+/i).filter(Boolean);
+  const formatted = parts.map((a) => {
+    const trimmed = a.trim();
+    if (trimmed.includes(",")) {
+      const [last, rest] = trimmed.split(",", 2);
+      if (style === "mla") return `${last}, ${rest.trim()}`;
+      const first = rest.trim().split(/\s+/)[0];
+      const init = first.charAt(0).toUpperCase() + ".";
+      return `${last}, ${init}`;
+    }
+    const words = trimmed.split(/\s+/);
+    const last = words.pop();
+    const first = words.join(" ");
+    if (style === "mla") return `${last}, ${first}`;
+    const init = first.charAt(0).toUpperCase() + ".";
+    return `${last}, ${init}`;
+  });
+  if (formatted.length === 1) return formatted[0];
+  if (style === "mla") return formatted.slice(0, -1).join(", ") + ", and " + formatted[formatted.length - 1];
+  return formatted.slice(0, -1).join(", ") + ", & " + formatted[formatted.length - 1];
+}
+
+function genMLA(entry) {
+  const f = entry.fields;
+  const author = f.author ? formatAuthors(f.author, "mla") + ". " : "";
+  const title = f.title ? `"${f.title}." ` : "";
+  const journal = f.journal || f.booktitle || "";
+  const vol = f.volume ? `vol. ${f.volume}` : "";
+  const no = f.number ? `no. ${f.number}` : "";
+  const year = f.year ? `${f.year}` : "";
+  const pages = f.pages ? `pp. ${f.pages}` : "";
+  const parts = [author, title];
+  if (journal) parts.push(`${journal}, `);
+  if (vol && no) parts.push(`${vol}, ${no}, `);
+  else if (vol) parts.push(`${vol}, `);
+  else if (no) parts.push(`${no}, `);
+  if (year) parts.push(`${year}, `);
+  if (pages) parts.push(`${pages}.`);
+  else parts.push(".");
+  return parts.join("").replace(/, \.$/, ".");
+}
+
+function genAPA(entry) {
+  const f = entry.fields;
+  const author = f.author ? formatAuthors(f.author, "apa") : "";
+  const year = f.year ? `(${f.year}).` : "(n.d.).";
+  const title = f.title ? `${f.title}.` : "";
+  const journal = f.journal || f.booktitle || "";
+  const vol = f.volume || "";
+  const no = f.number || "";
+  const pages = f.pages ? `, ${f.pages}` : "";
+  const url = f.url || "";
+  const parts = [`${author} ${year}`];
+  if (title) parts.push(title);
+  if (journal) {
+    let jPart = `${journal}`;
+    if (vol) jPart += `, ${vol}`;
+    if (no) jPart += `(${no})`;
+    if (pages) jPart += pages;
+    parts.push(jPart);
+  }
+  if (url) parts.push(url);
+  return parts.join(" ");
+}
+
+// --- References processing ---
+
+const refsRaw = article.data.references || "";
+const allRefEntries = parseAllBibTeX(refsRaw);
+allRefEntries.sort((a, b) => {
+  const aLast = getFirstAuthorLastName(a).toLowerCase();
+  const bLast = getFirstAuthorLastName(b).toLowerCase();
+  if (aLast < bLast) return -1;
+  if (aLast > bLast) return 1;
+  return 0;
+});
+
+const keyToNum = {};
+allRefEntries.forEach((e, i) => { keyToNum[e.key] = i + 1; });
+
+const refsData = JSON.stringify(
+  allRefEntries.map((e) => ({
+    key: e.key,
+    num: keyToNum[e.key],
+    bibtex: `@${e.type}{${e.key},
+${Object.entries(e.fields).map(([k, v]) => `  ${k} = {${v}}`).join(",\n")}
+}`,
+    mla: genMLA(e),
+    apa: genAPA(e),
+  }))
+);
+
+const bibHTML = allRefEntries
+  .map((e, i) => `<li id="ref-${i + 1}"><span class="ref-num">[${i + 1}]</span> ${genMLA(e)}</li>`)
+  .join("\n");
+
+// --- Cite popout data ---
+const bibtexRaw = article.data.cite_data || "";
+const bibEntry = parseBibTeX(bibtexRaw);
+const mlaCitation = bibEntry.fields.author ? genMLA(bibEntry) : "";
+const apaCitation = bibEntry.fields.author ? genAPA(bibEntry) : "";
+---
+
+<BaseLayout
+  title={`${article.data.title} | Aleksander Płomiński`}
+  description={article.data.description}
+  canonical={articleUrl}
+>
+  <main class="mx-auto max-w-4xl px-6 pb-20 pt-10 md:px-10 md:pt-16">
+    <header class="hero reveal">
+      <p class="eyebrow">aplominski.dev / research / {article.id}</p>
+      <h1 class="hero-title">{article.data.title}</h1>
+      <time class="mt-3 block text-sm text-zinc-500">{dateStr}</time>
+      <p class="hero-subtitle fade-in" style="--fade-delay: 160ms;">
+        {article.data.description}
+      </p>
+    </header>
+
+    {(article.data.doi || article.data.pdf || article.data.code || article.data.tags || article.data.cite_data) && (
+      <section class="section reveal flex flex-wrap items-center justify-between gap-3" style="--delay: 220ms;">
+        <div class="flex flex-wrap gap-3">
+          {article.data.doi && (
+            <a class="btn-secondary text-sm" href={`https://doi.org/${article.data.doi}`} rel="noreferrer">
+              DOI
+            </a>
+          )}
+          {article.data.pdf && (
+            <a class="btn-secondary text-sm" href={article.data.pdf} rel="noreferrer">
+              PDF
+            </a>
+          )}
+          {article.data.code && (
+            <a class="btn-secondary text-sm" href={article.data.code} rel="noreferrer">
+              Code
+            </a>
+          )}
+          {article.data.cite_data && (
+            <button class="btn-secondary text-sm cite-btn" data-cite>Cite</button>
+          )}
+        </div>
+        {article.data.tags && (
+          <div class="tech-tags">
+            {article.data.tags.map((tag) => <span>{tag}</span>)}
+          </div>
+        )}
+      </section>
+    )}
+
+    <section class="section reveal prose prose-invert max-w-none" style="--delay: 280ms;" id="prose-content">
+      <Content />
+    </section>
+
+    {allRefEntries.length > 0 && (
+      <>
+        <section class="section reveal" style="--delay: 320ms;" id="refs-section">
+          <h2>References</h2>
+          <div class="refs-list" set:html={`<ol>${bibHTML}</ol>`} />
+        </section>
+        <script id="refs-data" type="application/json" set:html={refsData} />
+      </>
+    )}
+
+    <div class="mt-10 flex flex-wrap gap-4 fade-in" style="--fade-delay: 360ms;">
+      <a class="btn-secondary" href="/research">&larr; All articles</a>
+      <a class="btn-secondary" href="/">Home</a>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const citeBtn = document.querySelector("[data-cite]");
+      if (citeBtn) {
+        const popout = document.getElementById("cite-popout");
+        const closeBtn = popout.querySelector("[data-cite-close]");
+        const tabs = popout.querySelectorAll("[data-cite-tab]");
+        const panels = popout.querySelectorAll("[data-cite-panel]");
+        const copyBtn = popout.querySelector("[data-cite-copy]");
+        function closePopout() {
+          popout.classList.remove("active");
+          document.body.style.overflow = "";
+          copyBtn.textContent = "Copy to clipboard";
+          copyBtn.classList.remove("copied");
+        }
+        citeBtn.addEventListener("click", () => {
+          popout.classList.add("active");
+          document.body.style.overflow = "hidden";
+        });
+        closeBtn.addEventListener("click", closePopout);
+        popout.addEventListener("click", (e) => { if (e.target === popout) closePopout(); });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && popout.classList.contains("active")) closePopout();
+        });
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", () => {
+            tabs.forEach((t) => t.classList.remove("active"));
+            tab.classList.add("active");
+            panels.forEach((p) => p.classList.remove("active"));
+            popout.querySelector(`[data-cite-panel="${tab.dataset.citeTab}"]`).classList.add("active");
+            copyBtn.textContent = "Copy to clipboard";
+            copyBtn.classList.remove("copied");
+          });
+        });
+        copyBtn.addEventListener("click", async () => {
+          const pre = popout.querySelector(".cite-panel.active pre code");
+          if (!pre) return;
+          try {
+            await navigator.clipboard.writeText(pre.textContent);
+            copyBtn.textContent = "Copied!";
+            copyBtn.classList.add("copied");
+          } catch { copyBtn.textContent = "Failed to copy"; }
+        });
+      }
+      const prose = document.getElementById("prose-content");
+      const refsDataEl = document.getElementById("refs-data");
+      if (!prose || !refsDataEl) return;
+      const refs = JSON.parse(refsDataEl.textContent);
+      if (refs.length === 0) return;
+      prose.innerHTML = prose.innerHTML.replace(
+        /\^\$\((\w+)\)/g,
+        (_, key) => {
+          const ref = refs.find((r) => r.key === key);
+          if (!ref) return `<sup class="cite-ref missing" title="Unknown reference: ${key}">[?]</sup>`;
+          return `<sup><a href="#ref-${ref.num}" class="cite-ref">[${ref.num}]</a></sup>`;
+        }
+      );
+    });
+  </script>
+
+  <div id="cite-popout" class="cite-popout">
+    <div class="cite-popout-inner">
+      <div class="cite-popout-header">
+        <h3>Cite this</h3>
+        <button class="cite-popout-close" data-cite-close aria-label="Close">&times;</button>
+      </div>
+      <p class="cite-info">Copy citation of the full published version.</p>
+      <div class="cite-tabs">
+        <button class="cite-tab active" data-cite-tab="bibtex">BibTeX</button>
+        {mlaCitation && <button class="cite-tab" data-cite-tab="mla">MLA</button>}
+        {apaCitation && <button class="cite-tab" data-cite-tab="apa">APA</button>}
+      </div>
+      <div class="cite-panel active" data-cite-panel="bibtex">
+        <pre class="cite-pre"><code>{bibtexRaw}</code></pre>
+      </div>
+      {mlaCitation && (
+        <div class="cite-panel" data-cite-panel="mla">
+          <pre class="cite-pre"><code>{mlaCitation}</code></pre>
+        </div>
+      )}
+      {apaCitation && (
+        <div class="cite-panel" data-cite-panel="apa">
+          <pre class="cite-pre"><code>{apaCitation}</code></pre>
+        </div>
+      )}
+      <button class="cite-copy-btn" data-cite-copy>Copy to clipboard</button>
+    </div>
+  </div>
+
+</BaseLayout>
+
+<style is:global>
+  html { scroll-behavior: smooth; }
+  .cite-ref {
+    color: var(--color-link);
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .cite-ref:hover { color: var(--color-link-hover); }
+  .cite-ref.missing { color: #f87171; cursor: help; }
+  .refs-list ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .refs-list ol li {
+    margin-bottom: 0.75rem;
+    padding-left: 3rem;
+    position: relative;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    font-size: 0.92rem;
+  }
+  .ref-num {
+    position: absolute;
+    left: 0;
+    color: var(--color-link);
+    font-weight: 600;
+  }
+</style>
+<style>
+  .cite-popout {
+    position: fixed;
+    inset: 0;
+    background: rgb(7 10 16 / 0.92);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 260ms ease;
+  }
+  .cite-popout.active { opacity: 1; pointer-events: auto; }
+  .cite-popout-inner {
+    background: linear-gradient(160deg, rgb(18 22 33 / 0.98), rgb(12 15 23 / 0.98));
+    border: 1px solid rgb(127 164 198 / 0.25);
+    border-radius: 1rem;
+    max-width: 640px; width: 100%;
+    padding: 1.5rem;
+    box-shadow: 0 20px 60px -20px rgb(0 0 0 / 0.6);
+  }
+  .cite-popout-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 0.35rem;
+  }
+  .cite-popout-header h3 { color: var(--color-text-primary); font-size: 1.1rem; font-weight: 600; }
+  .cite-popout-close {
+    background: none; border: none; color: var(--color-text-muted);
+    font-size: 1.5rem; cursor: pointer; padding: 0.25rem; line-height: 1;
+  }
+  .cite-popout-close:hover { color: white; }
+  .cite-info {
+    color: var(--color-text-muted); font-size: 0.82rem;
+    margin-bottom: 1rem; font-style: italic;
+  }
+  .cite-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+  .cite-tab {
+    background: rgb(14 20 30 / 0.6);
+    border: 1px solid rgb(127 164 198 / 0.2);
+    border-radius: 0.5rem; padding: 0.4rem 0.9rem;
+    color: var(--color-text-muted); font-size: 0.88rem; cursor: pointer;
+    transition: border-color 180ms ease, color 180ms ease;
+  }
+  .cite-tab:hover { border-color: rgb(127 203 255 / 0.4); color: var(--color-text-primary); }
+  .cite-tab.active { border-color: var(--color-accent); color: var(--color-text-primary); background: rgb(127 164 198 / 0.1); }
+  .cite-panel { display: none; }
+  .cite-panel.active { display: block; }
+  .cite-pre {
+    background: rgb(7 10 16 / 0.8);
+    border: 1px solid rgb(127 164 198 / 0.15);
+    border-radius: 0.6rem; padding: 1rem; overflow-x: auto;
+    margin-bottom: 1rem; max-height: 240px;
+    font-size: 0.82rem; line-height: 1.55; color: var(--color-text-secondary);
+  }
+  .cite-pre code { white-space: pre-wrap; word-break: break-word; }
+  .cite-copy-btn {
+    width: 100%;
+    border: 1px solid rgb(127 203 255 / 0.35);
+    border-radius: 0.6rem; padding: 0.55rem;
+    background: rgb(14 20 30 / 0.6);
+    color: var(--color-link-hover); font-weight: 600; font-size: 0.9rem; cursor: pointer;
+    transition: border-color 180ms ease, background 180ms ease;
+  }
+  .cite-copy-btn:hover { border-color: rgb(127 203 255 / 0.7); background: rgb(127 164 198 / 0.08); }
+  .cite-copy-btn.copied { border-color: #4ade80; color: #4ade80; }
+</style>
