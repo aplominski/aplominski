@@ -1,6 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
 import "../styles/global.css";
+
+const allProjects = await getCollection("projects");
+allProjects.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
 
 <BaseLayout
@@ -25,33 +29,19 @@ import "../styles/global.css";
     <section class="section reveal" style="--delay: 220ms;">
       <h2>Projects</h2>
       <div class="project-grid">
-        <a href="/projects/hs-http" class="project-card">
-          <div class="project-thumb">
-            <img src="/ss/hs-http_index.png" alt="hs-http" />
-          </div>
-          <div class="project-info">
-            <h3>hs-http</h3>
-            <p>HTTP/1.1 & HTTP/2 server with C/C++ plugin support</p>
-          </div>
-        </a>
-        <a href="/projects/mozaic" class="project-card">
-          <div class="project-thumb">
-            <img src="/ss/mozaic_main.png" alt="mozaic" />
-          </div>
-          <div class="project-info">
-            <h3>mozaic</h3>
-            <p>TUI-based IRC client written in Rust</p>
-          </div>
-        </a>
-        <a href="/projects/opendevnote" class="project-card">
-          <div class="project-thumb">
-            <img src="/ss/odn_today.png" alt="OpenDevNote" />
-          </div>
-          <div class="project-info">
-            <h3>OpenDevNote</h3>
-            <p>Flutter productivity app with calculator, GitHub, calendar</p>
-          </div>
-        </a>
+        {allProjects.map((project) => (
+          <a href={`/projects/${project.id}`} class="project-card">
+            {project.data.thumbnail && (
+              <div class="project-thumb">
+                <img src={project.data.thumbnail} alt={project.data.title} />
+              </div>
+            )}
+            <div class="project-info">
+              <h3>{project.data.title}</h3>
+              <p>{project.data.description}</p>
+            </div>
+          </a>
+        ))}
       </div>
     </section>
   </main>

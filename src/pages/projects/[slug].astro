@@ -1,0 +1,93 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Lightbox from "../../components/Lightbox.astro";
+import { getCollection, render } from "astro:content";
+import "../../styles/global.css";
+
+export async function getStaticPaths() {
+  const allProjects = await getCollection("projects");
+  return allProjects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+
+const siteUrl = "https://aplominski.dev";
+const projectUrl = `${siteUrl}/projects/${project.id}`;
+const screenshots = project.data.screenshots || [];
+---
+
+<BaseLayout
+  title={`${project.data.title} | Aleksander Płomiński`}
+  description={project.data.description}
+  canonical={projectUrl}
+>
+  <main class="mx-auto max-w-5xl px-6 pb-20 pt-10 md:px-10 md:pt-16">
+    <header class="hero reveal">
+      <p class="eyebrow">aplominski.dev / projects / {project.id}</p>
+      <h1 class="hero-title">{project.data.title}</h1>
+      <p class="hero-subtitle fade-in" style="--fade-delay: 160ms;">
+        {project.data.description}
+      </p>
+    </header>
+
+    <section class="section reveal" style="--delay: 220ms;">
+      <h2>About</h2>
+      <Content />
+    </section>
+
+    {screenshots.length > 0 && (
+      <section class="section reveal" style="--delay: 320ms;">
+        <h2>Screenshots</h2>
+        <div class="gallery">
+          <div class="gallery-main">
+            <img class="lightbox-trigger gallery-load" loading="lazy" src={screenshots[0].src} alt={screenshots[0].alt} />
+          </div>
+          {screenshots.length > 1 && (
+            <div class="gallery-thumbs">
+              {screenshots.slice(1).map((s, i) => (
+                <img class="lightbox-trigger gallery-load" loading="lazy" style={`--fade-delay: ${100 + i * 100}ms`} src={s.src} alt={s.alt} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    <section class="section reveal" style="--delay: 420ms;">
+      <h2>Tech Stack</h2>
+      <div class="tech-tags">
+        {project.data.tags.map((tag) => <span>{tag}</span>)}
+      </div>
+    </section>
+
+    <section class="section reveal" style="--delay: 480ms;">
+      <h2>Repository</h2>
+      <p><a href={project.data.github} rel="noreferrer">{project.data.github}</a></p>
+    </section>
+
+    <div class="mt-10 flex flex-wrap gap-4 fade-in" style="--fade-delay: 520ms;">
+      <a class="btn-secondary" href="/projects">&larr; All Projects</a>
+      <a class="btn-primary" href="/contact">Contact me</a>
+    </div>
+  </main>
+
+  <Lightbox />
+</BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const lazyObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('loaded');
+          lazyObserver.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '100px' });
+    document.querySelectorAll('.gallery-load').forEach(img => lazyObserver.observe(img));
+  });
+</script>
